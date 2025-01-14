@@ -9,8 +9,4 @@ This README is hard
 This README is not wanting to change
 This README has been changed
 This README is an Assignment
-cp -r Assignments/ ../Data_Course_BARRETT/
-cp -r Code_Examples/ ../Data_Course_BARRETT/
-cp -r Data/ ../Data_Course_BARRETT/
-cp -r Exercises/ ../Data_Course_BARRETT/
-cp -r Readings/ ../Data_Course_BARRETT/
+
