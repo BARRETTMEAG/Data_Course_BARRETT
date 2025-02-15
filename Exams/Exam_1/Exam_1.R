@@ -57,13 +57,16 @@ View(state_max_fatality_rate)
 #X-axis labels turned to 90 deg to be readable
 #Even with this partial data set (not current), you should be able to see that (within these dates), different states had very different fatality ratios.
 
+
+#Wasn't sure which way you wanted this chart, if you wanted the words connecting or not. Gave you both ways connecting and not. 
 #This chart has the words connected with a _
 state_max_fatality_rate %>%
   ggplot(aes(x = reorder(Province_State, -Maximum_Fatality_Ratio), y = Maximum_Fatality_Ratio)) +
   geom_bar(stat = "identity") +
   labs(title = "States Maximum Fatality Ratio",
        x = "Province_State", y = "Maximum_Fatality_Ratio") +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+  theme(axis.text.x = element_text(angle = 90, hjust = 1),
+        plot.title = element_text(hjust = 0.5))
 
 #without _ connecting words
 state_max_fatality_rate %>%
@@ -72,7 +75,8 @@ state_max_fatality_rate %>%
   geom_bar(stat = "identity") +
   labs(title = "States Maximum Fatality Ratio",
        x = "Province State", y = "Maximum Fatality Ratio") +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+  theme(axis.text.x = element_text(angle = 90, hjust = 1),
+        plot.title = element_text(hjust = 0.5))
 
 #VI. (BONUS 10 pts) Using the FULL data set, plot cumulative deaths for the entire US over time####
 #You’ll need to read ahead a bit and use the dplyr package functions group_by() and summarize() to accomplish this.
