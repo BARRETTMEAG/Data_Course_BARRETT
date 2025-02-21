@@ -27,7 +27,6 @@ View(A_states)
 #Keep scales “free” in each facet
 
 A_states %>%
-  filter(!is.na(Deaths)) %>% 
   ggplot(aes(x = as.Date(Last_Update), y = Deaths)) +
   geom_point() + 
   geom_smooth(method = "loess", se = FALSE) +
