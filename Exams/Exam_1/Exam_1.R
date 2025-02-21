@@ -27,6 +27,7 @@ View(A_states)
 #Keep scales “free” in each facet
 
 A_states %>%
+  filter(!is.na(Deaths)) %>% 
   ggplot(aes(x = as.Date(Last_Update), y = Deaths)) +
   geom_point() + 
   geom_smooth(method = "loess", se = FALSE) +
@@ -43,6 +44,7 @@ A_states %>%
 #This might take a few steps. Be careful about how you deal with missing values!
   
 state_max_fatality_rate <- covid_data %>%
+  filter(!is.na(Case_Fatality_Ratio)) %>% 
   group_by(Province_State) %>%
   summarise(Maximum_Fatality_Ratio = max(Case_Fatality_Ratio, na.rm = TRUE)) %>%
   arrange(desc(Maximum_Fatality_Ratio))
