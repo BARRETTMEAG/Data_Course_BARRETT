@@ -67,7 +67,8 @@ state_max_fatality_rate %>%
   labs(title = "States Maximum Fatality Ratio",
        x = "Province_State", y = "Maximum_Fatality_Ratio") +
   theme(axis.text.x = element_text(angle = 90, hjust = 1),
-        plot.title = element_text(hjust = 0.5))
+        plot.title = element_text(hjust = 0.5))+
+  coord_flip() 
 
 #without _ connecting words
 state_max_fatality_rate %>%
@@ -77,7 +78,8 @@ state_max_fatality_rate %>%
   labs(title = "States Maximum Fatality Ratio",
        x = "Province State", y = "Maximum Fatality Ratio") +
   theme(axis.text.x = element_text(angle = 90, hjust = 1),
-        plot.title = element_text(hjust = 0.5))
+        plot.title = element_text(hjust = 0.5))+
+  coord_flip() 
 
 #VI. (BONUS 10 pts) Using the FULL data set, plot cumulative deaths for the entire US over time####
 #You’ll need to read ahead a bit and use the dplyr package functions group_by() and summarize() to accomplish this.
