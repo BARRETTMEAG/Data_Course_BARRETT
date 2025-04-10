@@ -1,0 +1,38 @@
+# Assignment_8
+
+# 1. Are any of your predicted response values from your best model scientifically meaningless? Explain.
+
+Yes, some predicted values may be considered scientifically meaningless if they fall outside a specific variable range. For example, if the predicted GrowthRate is either negative, exceedingly high, or if a prediction is far from the observed data, then this may potentially indicate that the model is not generalizing well.
+
+
+
+# 2. In your plots, did you find any non-linear relationships? Do a bit of research online and give a link to at least one resource explaining how to deal with modeling non-linear relationships in R.
+
+Yes, in some plots like GrowthRate vs. Nitrogen, there might be non-linear relationships. Non-linear relationships can often be modeled using techniques like polynomial regression or Generalized Additive Models (GAMs). A good resource I found was found on GitHub. The individual did a good job of simplifying the information in steps. <https://tuos-bio-data-skills.github.io/intro-stats-book/non-linear-regression-in-R.html>
+
+
+
+# 3. Write the code you would use to model the data found in “/Data/non_linear_relationship.csv” with a linear model (there are a few ways of doing this)
+
+# Load data
+non_linear_data <- read.csv("Data/non_linear_relationship.csv")
+
+# Visualize the data
+non_linear_data %>% 
+  ggplot(aes(x = predictor, y = response)) +
+  geom_point() +
+  theme_minimal() +
+  ggtitle("Non-linear Data")
+
+# Fit polynomial linear model (quadratic)
+mod_poly <- lm(response ~ poly(predictor, 2), data = non_linear_data)
+summary(mod_poly)
+
+# Visualize fit poly
+non_linear_data %>%  
+  ggplot(aes(x = predictor, y = response)) +
+  geom_point() +
+  stat_smooth(method = "lm", formula = y ~ poly(x, 2), color = "blue", se = FALSE) +
+  theme_minimal()
+
+
