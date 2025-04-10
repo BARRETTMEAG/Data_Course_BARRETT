@@ -91,21 +91,10 @@ tidy_data %>%
   ggplot(aes(x = YearsSinceBurn, y = Concentration)) +
   geom_smooth(aes(group = ChemicalID)) +
   facet_wrap(~ChemicalID, scales = "free") +
-  scale_x_continuous(limits = c(0, 20), breaks = seq(5, 20, by = 5)) + 
+  scale_x_continuous(limits = c(2, 20), breaks = seq(5, 20, by = 5)) + 
   theme_minimal() +
   labs(x = "YearsSinceBurn", 
-       y = "Concentration")+
-  scale_y_continuous(breaks = function(x) {  # Define custom breaks for specific chemicals
-    if (any(grepl("compound", unique(tidy_data$ChemicalID)))) {
-      return(seq(0, 40, by = 10)) 
-    }  elif {
-      return(seq(0, 30, by = 10))
-    } elif {
-      return(seq(0, 20, by = 5))   
-    } elif {
-      return(seq(0, 10, by = 2.5))
-    } 
-  })
+       y = "Concentration")
 
 
 # 5. Use a generalized linear model to find which chemicals show ####
