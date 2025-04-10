@@ -13,7 +13,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ## 1. Load and clean FacultySalaries_1995.csv file and Re-create the graph
 First, load the necessary libraries:
 
-```{r, echo=TRUE}
+```{r, echo=FALSE, results= 'hide'}
 library(tidyverse)
 library(easystats)
 library(tidyr)
@@ -99,8 +99,7 @@ tidy_data <- juniper_data %>%
 tidy <-tidy_data %>% 
   ggplot(aes(x = YearsSinceBurn, y = Concentration)) +
   geom_smooth(aes(group = ChemicalID)) +
-  facet_wrap(~ChemicalID, scales = "free") +
-  scale_x_continuous(limits = c(0, 20), breaks = seq(5, 20, by = 5)) + 
+  facet_wrap(~ChemicalID, scales = "free") + 
   theme_minimal() +
   labs(x = "YearsSinceBurn", 
        y = "Concentration")

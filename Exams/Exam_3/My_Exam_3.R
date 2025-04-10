@@ -91,7 +91,6 @@ tidy_data %>%
   ggplot(aes(x = YearsSinceBurn, y = Concentration)) +
   geom_smooth(aes(group = ChemicalID)) +
   facet_wrap(~ChemicalID, scales = "free") +
-  scale_x_continuous(limits = c(2, 20), breaks = seq(5, 20, by = 5)) + 
   theme_minimal() +
   labs(x = "YearsSinceBurn", 
        y = "Concentration")
