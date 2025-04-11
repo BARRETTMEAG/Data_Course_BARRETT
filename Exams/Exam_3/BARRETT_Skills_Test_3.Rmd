@@ -10,10 +10,10 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```
 
-## 1. Load and clean FacultySalaries_1995.csv file and Re-create the graph
+### 1. Load and clean FacultySalaries_1995.csv file and Re-create the graph
 First, load the necessary libraries:
 
-```{r, echo=FALSE, results= 'hide'}
+```{r, echo=TRUE}
 library(tidyverse)
 library(easystats)
 library(tidyr)
@@ -65,7 +65,7 @@ clean_box
 ggsave("fig1.png", plot = clean_box, width = 8, height = 6, dpi = 300)
 ```
 
-## 2. Build an ANOVA model and display the summary output in your report.
+### 2. Build an ANOVA model and display the summary output in your report.
 ```{r setup, echo=TRUE}
 
 # Fit the ANOVA model
@@ -74,7 +74,7 @@ anova_model <- aov(Salary ~ State + Tier + Rank, data = faculty_data_clean_filte
 # Display the summary of the ANOVA model
 summary(anova_model)
 ```
-## 3. The rest of the test uses another data set. The “Juniper_Oils.csv” data. Get it loaded and take a look. Then tidy it! (show the code used for tidying in your report)
+### 3. The rest of the test uses another data set. The “Juniper_Oils.csv” data. Get it loaded and take a look. Then tidy it! (show the code used for tidying in your report)
 
 ```{r, echo=TRUE}
 juniper_data <- read.csv("Juniper_Oils.csv")
@@ -94,7 +94,10 @@ tidy_data <- juniper_data %>%
                         "cedrol", "beta-acorenol", "alpha-acorenol", "gamma-eudesmol", "beta-eudesmol", 
                         "alpha-eudesmol", "cedr-8-en-13-ol", "cedr-8-en-15-ol", "compound 2", "thujopsenal"),
                names_to = "ChemicalID", values_to = "Concentration")
+```
 
+### 4. Make me a graph of the following: x = YearsSinceBurn, y = Concentration, facet = ChemicalID (use free y-axis scales)
+```{r, echo=TRUE}
 # Create the plot
 tidy <-tidy_data %>% 
   ggplot(aes(x = YearsSinceBurn, y = Concentration)) +
@@ -107,8 +110,7 @@ tidy <-tidy_data %>%
 tidy
 ```
 
-## 4. Make me a graph of the following: x = YearsSinceBurn, y = Concentration, facet = ChemicalID (use free y-axis scales)
-
+### 5. Use a generalized linear model to find which chemicals show concentrations that are significantly (significant, as in P < 0.05) affected by “Years Since Burn”.
 ```{r, echo=TRUE}
 # Step 1: Run GLM for each chemical separately
 lm_results <- tidy_data %>%
