@@ -1,44 +1,114 @@
 ---
-output: 
-html_document:
-  number_sections=TRUE
-pagetitle: Assignment_9
+title: "Assignment_9"
+author: "Meaghan Barrett"
+date: "2025-04-12"
+output: html_document
 ---
-
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-# **Assignment 9**
+# **Loading libraries**
 
-In this assignment, you will use R (within R-Studio) to:
-  
-+ Load and clean a real data set
-+ Conduct exploratory analyses, including informative figures
-+ Build and test appropriate models
-+ Draw conclusions about your data
-+ Combine all of the above into a well-documented R-Markdown report and export (knit) it into an HTML file
+```{r, echo=FALSE, output = 'hide'}
+library(tidyverse) 
+library(caret)     
+library(ggplot2)    
+library(dplyr)  
+library(corrplot)
+library(pROC)
+library(MASS)
 
-**All file paths should be relative, starting from *your* Assignment_9 directory!!**
-
-**This means that you need to create a new R-Project named "Assignment_9.Rproj" in your Assignment_9 directory, and work from scripts within that.**
+```
 
 
-## **For credit...**
+# **Load File**
+```{r, echo=TRUE}
+school <- read.csv('GradSchool_Admissions.csv')
 
-1.  Push a completed version of your Rproj and R-markdown file (details at end of this assignment) to GitHub
-2.  Your score will also depend on your analyses and presentation of your final report
+# Check for missing values
+school <- na.omit(school)
+sum(is.na(school))
 
-____________
+# Convert the 'admit' column to factor (since it's binary)
+school$admit <- as.factor(school$admit)
 
-# Your tasks:
+# Check data types
+str(school)
 
-+ Use the data set "/Data/GradSchool_Admissions.csv"
-+ You will explore and model the predictors of graduate school admission
-  - the "admit" column is coded as 1=success and 0=failure (that's binary, so model appropriately)
-  - the other columns are the GRE score, the GPA, and the rank of the undergraduate institution, where I is "top-tier."
-+ Document your data explorations, figures, and conclusions in a reproducible R-markdown report
-+ That means I want to see, in your html report, your process of model evaluation and selection. Here's an [example](https://gzahn.github.io/data-course/Repository/Assignments/Assignment_9/example.html){target="_blank"}
-+ Upload your **self-contained** R project, including knitted HTML report, to GitHub in *your* Assignment_9 directory
+school <- school %>%
+  mutate(
+    rank = factor(rank),
+    admit = factor(admit, labels = c("Failure", "Admitted"))
+)
 
+# Summary statistics
+summary(school)
+
+# Admission rate by rank
+school %>%
+  group_by(rank) %>%
+  summarise(admit_rate = mean(admit == "Admitted"))
+```
+
+
+# **Graphing**
+```{r, echo=TRUE}
+# GRE vs GPA, colored by admit
+gre_gpa <-school %>% 
+  ggplot(aes(x = gre, y = gpa, color = admit)) +
+  geom_point(alpha = 0.6) +
+  labs(title = "GRE vs GPA by Admission Status")
+
+plot(gre_gpa)
+
+# Admission rate by rank (bar plot)
+rate_rank <-school %>% 
+  ggplot(aes(x = rank, fill = admit)) +
+  geom_bar(position = "fill") +
+  labs(y = "Proportion", title = "Admission Rate by Rank")
+
+plot(rate_rank)
+```
+# More Graphs
+
+```{r, echo=TRUE}
+# Histogram of GRE scores
+school %>% 
+  ggplot(aes(x = gre)) +
+  geom_histogram(binwidth = 50, fill = "blue", color = "black", alpha = 0.7) +
+  facet_wrap(~admit)+
+  labs(title = "Distribution of GRE Scores", x = "GRE Score", y = "Frequency")
+
+# Histogram of GPA scores
+school %>% 
+  ggplot(aes(x = gpa)) +
+  geom_histogram(binwidth = 0.1, fill = "green", color = "black", alpha = 0.7) +
+  facet_wrap(~admit) +
+  labs(title = "Distribution of GPA", x = "GPA", y = "Frequency")
+
+# Boxplot of GPA by Admission Status
+school %>% 
+  ggplot(aes(x = admit, y = gpa)) +
+  geom_boxplot() +
+  labs(title = "GPA by Admission Status", x = "Admission Status", y = "GPA")
+
+```
+
+# **Modeling**
+```{r, echo=TRUE}
+# Fit a logistic regression model
+model <- glm(admit ~ gre + gpa + rank, data = school, family = "binomial")
+summary(model)
+
+# Get predicted probabilities
+school$prob <- predict(model, type = "response")
+
+# Confusion matrix (using 0.5 cutoff)
+school$predicted <- ifelse(school$prob > 0.5, "Admitted", "Failed")
+table(school$admit, school$predicted)
+
+# Accuracy
+mean(school$admit == school$predicted)
+```
