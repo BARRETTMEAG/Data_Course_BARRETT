@@ -5,7 +5,6 @@ library(caret)
 library(ggplot2)    
 library(dplyr)  
 library(corrplot)
-library(pROC)
 library(MASS)
 
 school <- read.csv("Data/GradSchool_Admissions.csv")
@@ -47,19 +46,6 @@ school %>%
   geom_bar(position = "fill") +
   labs(y = "Proportion", title = "Admission Rate by Rank")
 
-# Fit a logistic regression model
-model <- glm(admit ~ gre + gpa + rank, data = school, family = "binomial")
-summary(model)
-
-# Get predicted probabilities
-school$prob <- predict(model, type = "response")
-
-# Confusion matrix (using 0.5 cutoff)
-school$predicted <- ifelse(school$prob > 0.5, "Admitted", "Failed")
-table(school$admit, school$predicted)
-
-# Accuracy
-mean(school$admit == school$predicted)
 
 
 # Histogram of GRE scores
@@ -90,47 +76,20 @@ school %>%
   facet_wrap(~admit)+
   labs(title = "Rank by Admission Status", x = "Admission Status", y = "Rank")
 
-cor_matrix <- school %>%
-  mutate(rank = as.numeric(rank)) %>%
-  dplyr::select(gre, gpa, rank) %>%
-  cor()
 
-print(cor_matrix)
+# Fit a logistic regression model
+model <- glm(admit ~ gre + gpa + rank, data = school, family = "binomial")
+summary(model)
 
+# Get predicted probabilities
+school$prob <- predict(model, type = "response")
 
-# Split the school data into training and testing sets
-set.seed(123)
-trainIndex <- createDataPartition(school$admit, p = 0.8, list = FALSE)
-trainData <- school[trainIndex, ]
-testData <- school[-trainIndex, ]
+# Confusion matrix (using 0.5 cutoff)
+school$predicted <- ifelse(school$prob > 0.5, "Admitted", "Failed")
+table(school$admit, school$predicted)
 
-# Build the model on the training data
-model_train <- glm(admit ~ gre + gpa + rank, data = trainData, family = binomial)
-
-# Predict on the test set
-predictions <- predict(model_train, testData, type = "response")
-
-# Convert predictions to binary values
-predicted_class <- ifelse(predictions > 0.5, 1, 0)
-
-# Make sure predicted and actual have the same factor levels
-predicted_class <- factor(predicted_class, levels = c("Failure", "Admitted"))
-actual_class <- factor(testData$admit, levels = c("Failure", "Admitted"))
-
-# Then run confusion matrix
-confusionMatrix(predicted_class, actual_class)
+# Accuracy
+mean(school$admit == school$predicted)
 
 
-# Then run confusion matrix
-confusionMatrix(predicted_class, actual_class)
 
-
-# ROC and AUC
-roc_curve <- roc(testData$admit, predictions)
-
-# Plot the ROC curve
-plot(roc_curve, col = "blue", main = "ROC Curve for Admission Model")
-
-# AUC
-auc_value <- auc(roc_curve)
-auc_value
