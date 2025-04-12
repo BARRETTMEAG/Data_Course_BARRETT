@@ -1,6 +1,5 @@
 #Assignment_6
 
-setwd("~/Desktop/Classes/UVU/BIOL3100/Data_Course_BARRETT")
 library(tidyverse)
 library(gganimate)
 
