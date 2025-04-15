@@ -7,7 +7,7 @@ library(dplyr)
 library(corrplot)
 library(MASS)
 
-school <- read.csv("Data/GradSchool_Admissions.csv")
+school <- read.csv("GradSchool_Admissions.csv")
 
 # Check for missing values
 school <- na.omit(school)
@@ -66,15 +66,8 @@ school %>%
 school %>% 
   ggplot(aes(x = admit, y = gpa)) +
   geom_boxplot() +
-  facet_wrap(~admit)+
+  #facet_wrap(~admit)+
   labs(title = "GPA by Admission Status", x = "Admission Status", y = "GPA")
-
-# Boxplot of Rank by Admission Status
-school %>% 
-  ggplot(aes(x = admit, y = rank)) +
-  geom_boxplot() +
-  facet_wrap(~admit)+
-  labs(title = "Rank by Admission Status", x = "Admission Status", y = "Rank")
 
 
 # Fit a logistic regression model
